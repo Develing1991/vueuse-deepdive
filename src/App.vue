@@ -1,23 +1,53 @@
 <script setup>
 import { ref } from 'vue';
-import { useClipboard } from '@vueuse/core';
+import { useDark, useToggle, useColorMode } from '@vueuse/core';
 
-const textToCopy = ref('Hello');
-// const { copy, copied, text, isSupported } = useClipboard({
-//   source: textToCopy,
-//   copiedDuring: 5000, // copied during time // default 2s
-// });
-const { copy, copied, text, isSupported } = useClipboard({
-  copiedDuring: 5000, // copied during time // default 2s
-});
+// const isDark = useDark(); //true or false
+// const toggleDark = useToggle(isDark);
+const colorMode = useColorMode({
+  modes: {
+    // custom mode
+    dim: 'dim',
+    cafe: 'cafe',
+  },
+  attribute: 'theme',
+}); // light or dark
 </script>
 
 <template>
-  <input type="text" v-model="textToCopy" />
-  <!-- <button @click="copy()">{{ copied ? 'Copied' : 'Copy' }}</button> -->
-  <button @click="copy(textToCopy)">{{ copied ? 'Copied' : 'Copy' }}</button>
-  <div>copied text : {{ text }}</div>
-  <div>isSupported : {{ isSupported }}</div>
+  {{ colorMode }}
+  <button @click="colorMode = 'dark'">Dark Mode</button>
+  <button @click="colorMode = 'light'">light Mode</button>
+  <button @click="colorMode = 'dim'">Dim Mode</button>
+  <button @click="colorMode = 'cafe'">Cafe Mode</button>
+  <!-- {{ isDark }}
+  <br />
+  <button @click="toggleDark()">Toggle Dark Mode</button> -->
 </template>
 
-<style scoped></style>
+<style>
+/* .dark {
+  background: #252525;
+  color: white;
+}
+.dim {
+  background: gray;
+  color: white;
+}
+.cafe {
+  background: #c0acac;
+  color: black;
+} */
+[theme='dark'] {
+  background: #252525;
+  color: white;
+}
+[theme='dim'] {
+  background: gray;
+  color: white;
+}
+[theme='cafe'] {
+  background: #c0acac;
+  color: black;
+}
+</style>
