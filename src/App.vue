@@ -1,53 +1,56 @@
 <script setup>
 import { ref } from 'vue';
-import { useDark, useToggle, useColorMode } from '@vueuse/core';
-
-// const isDark = useDark(); //true or false
-// const toggleDark = useToggle(isDark);
-const colorMode = useColorMode({
-  modes: {
-    // custom mode
-    dim: 'dim',
-    cafe: 'cafe',
-  },
-  attribute: 'theme',
-}); // light or dark
+import { onKeyStroke } from '@vueuse/core';
+const position = ref({ x: 0, y: 0 });
+const controls = {
+  ArrowDown: () => (position.value.y += 5),
+  ArrowUp: () => (position.value.y -= 5),
+  ArrowRight: () => (position.value.x += 5),
+  ArrowLeft: () => (position.value.x -= 5),
+};
+onKeyStroke(Object.keys(controls), (e) => {
+  e.preventDefault();
+  controls[e.key]();
+});
+// onKeyStroke(['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft'], (e) => {
+//   e.preventDefault();
+//   //ArrowDown...
+//   if (e.key === 'ArrowDown') {
+//     position.value.y += 5;
+//   }
+//   if (e.key === 'ArrowUp') {
+//     position.value.y -= 5;
+//   }
+//   if (e.key === 'ArrowRight') {
+//     position.value.x += 5;
+//   }
+//   if (e.key === 'ArrowLeft') {
+//     position.value.x -= 5;
+//   }
+// });
+// onKeyStroke('ArrowDown', (e) => {
+//   e.preventDefault();
+//   position.value.y += 5;
+// });
+// onKeyStroke('ArrowUp', (e) => {
+//   e.preventDefault();
+//   position.value.y -= 5;
+// });
 </script>
 
 <template>
-  {{ colorMode }}
-  <button @click="colorMode = 'dark'">Dark Mode</button>
-  <button @click="colorMode = 'light'">light Mode</button>
-  <button @click="colorMode = 'dim'">Dim Mode</button>
-  <button @click="colorMode = 'cafe'">Cafe Mode</button>
-  <!-- {{ isDark }}
-  <br />
-  <button @click="toggleDark()">Toggle Dark Mode</button> -->
+  <div class="ball"></div>
+  <input type="text" />
 </template>
 
 <style>
-/* .dark {
-  background: #252525;
-  color: white;
-}
-.dim {
-  background: gray;
-  color: white;
-}
-.cafe {
-  background: #c0acac;
-  color: black;
-} */
-[theme='dark'] {
-  background: #252525;
-  color: white;
-}
-[theme='dim'] {
-  background: gray;
-  color: white;
-}
-[theme='cafe'] {
-  background: #c0acac;
-  color: black;
+.ball {
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 50%;
+  position: absolute;
+  top: v-bind(position.y + 'px');
+  left: v-bind(position.x + 'px');
 }
 </style>
