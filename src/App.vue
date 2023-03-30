@@ -1,17 +1,24 @@
 <script setup>
-import { ref, watch } from 'vue';
-import { usePageLeave, whenever } from '@vueuse/core';
+import { ref, reactive, watch, onMounted } from 'vue';
+import { usePointer } from '@vueuse/core';
 
-const isLeft = usePageLeave();
-const unwatch = whenever(isLeft, () => {
-  alert('Are you sure you want to go?');
-  unwatch();
+const pointer = reactive(usePointer());
+const canvas = ref(null);
+watch(pointer, () => {
+  if (pointer.pressure === 0) return;
+  const ctx = canvas.value.getContext('2d');
+  ctx.fillStyle = 'red';
+  ctx.fillRect(pointer.x - 20, pointer.y - 20, 10, 10);
+});
+onMounted(() => {
+  canvas.value.height = document.body.clientHeight;
+  canvas.value.width = document.body.clientWidth;
 });
 </script>
 
 <template>
-  <br />
-  {{ isLeft }}
+  <canvas ref="canvas"></canvas>
+  <!-- <pre>  {{ pointer }}</pre> -->
 </template>
 
 <style></style>
