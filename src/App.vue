@@ -1,32 +1,31 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useIntersectionObserver } from '@vueuse/core';
-const h1 = ref(null);
-const h1IsVisible = ref(false);
-useIntersectionObserver(h1, ([{ isIntersecting }]) => {
-  h1IsVisible.value = isIntersecting;
+import { ref } from 'vue';
+import { useVirtualList } from '@vueuse/core';
+import ListItem from './components/ListItem.vue';
+const longList = ref(Array.from(Array(100_000).keys()));
+
+// containerProps : 전체 컨테이너 영역
+// wrapperProps : list의 바로 부모요소 (여기서는 ul)
+const { list, containerProps, wrapperProps } = useVirtualList(longList, {
+  itemHeight: 19, //실제 view에서 아이템 높이 (여기서는 li요소)
+  overscan: 10, // 그 높이만큼 10개 더 미리 출력
 });
 </script>
 
 <template>
-  <div style="height: 200px; overflow: scroll; border: 1px solid black">
-    <h1 :class="{ 'fade-in': h1IsVisible }" style="margin: 300px 0" ref="h1">
-      Hello
-    </h1>
+  <!-- <pre>{{ list }}</pre> -->
+  <div class="list-container" v-bind="containerProps">
+    <ul v-bind="wrapperProps">
+      <ListItem v-for="item in list" :id="item.data" :key="item.data" />
+    </ul>
   </div>
-  {{ h1IsVisible }}
 </template>
 
 <style>
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-.fade-in {
-  animation: fadeIn ease 1s;
+html,
+body,
+#app,
+.list-container {
+  height: 100%;
 }
 </style>
