@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useWindowSize } from '@vueuse/core';
-const { width, height } = useWindowSize();
+import { useWindowFocus } from '@vueuse/core';
+const focused = useWindowFocus();
 </script>
 
-<template>{{ width }} x {{ height }}</template>
+<template>{{ focused }}</template>
