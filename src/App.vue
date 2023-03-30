@@ -1,20 +1,42 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { logicAnd, logicNot, logicOr } from '@vueuse/math';
-const hasBread = ref(true);
-const filledWithMeat = ref(true);
-const hasTwoSlicesOfBread = ref(true);
-const isAHotdog = ref(false);
-const isASandWich = computed(() => {
-  return logicAnd(
-    hasBread,
-    filledWithMeat,
-    hasTwoSlicesOfBread,
-    logicNot(isAHotdog)
-  );
-});
+import { computed } from 'vue';
+import { useCycleList } from '@vueuse/core';
+
+const { state, next, prev } = useCycleList([
+  'https://tinyurl.com/2p8dav94',
+  'https://tinyurl.com/2p9yrrhs',
+  'https://tinyurl.com/ycxurpah',
+]);
 </script>
 
 <template>
-  {{ isASandWich }}
+  <div class="carousel">
+    <transition>
+      <img :src="state" alt="" :key="state" />
+    </transition>
+  </div>
+  <button @click="prev()">Previous</button>
+  <button @click="next()">Next</button>
 </template>
+
+<style>
+.carousel {
+  position: relative;
+  height: 200px;
+}
+img {
+  width: 100%;
+  position: absolute;
+  height: 200px;
+  object-fit: cover;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>
