@@ -1,20 +1,30 @@
-<script setup>
-import { ref, reactive, watch, onMounted } from 'vue';
-import { onLongPress } from '@vueuse/core';
-const longBtn = ref(null);
-onLongPress(
-  longBtn,
-  () => {
-    alert('Hello world');
-  },
-  {
-    delay: 3000,
-  }
-);
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useScroll } from '@vueuse/core';
+
+const scrollBox = ref(null);
+const scroll = useScroll(scrollBox);
 </script>
 
 <template>
-  <button ref="longBtn">Click and Hold</button>
+  <div class="scroll-box" ref="scrollBox">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+    facilisisMorbi facilisisMorbiddddddddddddddddddddddddddddddddddddddd
+    facilisisMorbi Morbi facilisisMorbi facilisisMorbi facilisisfacilisisMorbi
+    facilisis lorem felis mauris, vel dapibus nulla molestie laoreet. Nunc
+    porttitor metus faucibus ante pellentesque, ac maximus augue cursus. Fusce
+    hendrerit, eros dictum accumsan hendrerit.
+  </div>
+  <pre>  {{ scroll }}</pre>
 </template>
 
-<style></style>
+<style>
+.scroll-box {
+  background: gray;
+  height: 150px;
+  width: 200px;
+  overflow: scroll;
+  position: relative;
+  padding: 10px;
+}
+</style>
