@@ -1,12 +1,32 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { useNetwork } from '@vueuse/core';
+import { useGeolocation } from '@vueuse/core';
 
-const network = useNetwork();
+const { coords, locatedAt, error } = useGeolocation();
 </script>
 
 <template>
-  {{ network }}
+  <pre lang="json">
+    {{
+      JSON.stringify(
+        {
+          coords: {
+            accuracy: coords.accuracy,
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            altitude: coords.altitude,
+            altitudeAccuracy: coords.altitudeAccuracy,
+            heading: coords.heading,
+            speed: coords.speed,
+          },
+          locatedAt,
+          error: error ? error.message : error,
+        },
+        null,
+        2
+      )
+    }}
+  </pre>
 </template>
 
 <style></style>
