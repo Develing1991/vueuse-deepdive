@@ -1,12 +1,12 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { useBattery } from '@vueuse/core';
+import { useNetwork } from '@vueuse/core';
 
-const battery = useBattery();
+const network = useNetwork();
 </script>
 
 <template>
-  {{ battery }}
+  {{ network }}
 </template>
 
 <style></style>
