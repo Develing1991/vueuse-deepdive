@@ -1,12 +1,12 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { useBattery } from '@vueuse/core';
+import { useOnline } from '@vueuse/core';
 
-const battery = useBattery();
+const online = useOnline();
 </script>
 
 <template>
-  {{ battery }}
+  {{ online }}
 </template>
 
 <style></style>
