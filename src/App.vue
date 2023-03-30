@@ -1,32 +1,17 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { useGeolocation } from '@vueuse/core';
+import { usePageLeave, whenever } from '@vueuse/core';
 
-const { coords, locatedAt, error } = useGeolocation();
+const isLeft = usePageLeave();
+const unwatch = whenever(isLeft, () => {
+  alert('Are you sure you want to go?');
+  unwatch();
+});
 </script>
 
 <template>
-  <pre lang="json">
-    {{
-      JSON.stringify(
-        {
-          coords: {
-            accuracy: coords.accuracy,
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-            altitude: coords.altitude,
-            altitudeAccuracy: coords.altitudeAccuracy,
-            heading: coords.heading,
-            speed: coords.speed,
-          },
-          locatedAt,
-          error: error ? error.message : error,
-        },
-        null,
-        2
-      )
-    }}
-  </pre>
+  <br />
+  {{ isLeft }}
 </template>
 
 <style></style>
