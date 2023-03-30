@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useTimeout } from '@vueuse/core';
-const { ready, start, stop, isPending } = useTimeout(5000, { controls: true });
+import { useTimeoutFn } from '@vueuse/core';
+const showAlert = ref(true);
+const { start, stop, isPending } = useTimeoutFn(() => {
+  showAlert.value = false;
+}, 5000);
 </script>
 
 <template>
-  {{ ready }}
   {{ isPending }}
   <Transition appear>
-    <div class="alert" v-if="isPending">
+    <div class="alert" v-if="showAlert" @mouseenter="stop" @mouseout="start">
       You post has benn saved
       <button @click="stop">X</button>
     </div>
   </Transition>
-  <button @click="start">start</button>
 </template>
 <style>
 .v-enter-active,
