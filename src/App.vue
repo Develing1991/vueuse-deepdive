@@ -1,37 +1,60 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useIntervalFn, useRafFn } from '@vueuse/core';
-const activePosition = ref(0);
-const framesComplete = ref(0);
-// const { pause, resume, isActive } = useIntervalFn(() => {
-// 기본 1초에 60프레임 사용
-const { pause, resume, isActive } = useRafFn(() => {
-  framesComplete.value++;
-  // 60프레임을 6으로 나눴으니 1초에 10프레임씩 동작
-  if (framesComplete.value % 6) return; // 나머지가 0이면 동작 나머지는 truthy하니 리턴
-  console.log(framesComplete.value);
-  if (activePosition.value > -525) {
-    // 7 times frame
-    activePosition.value -= 75;
-  } else {
-    activePosition.value = 0;
-  }
-});
+import { useTimeout } from '@vueuse/core';
+const { ready, start, stop, isPending } = useTimeout(5000, { controls: true });
 </script>
 
 <template>
-  <button @click="isActive ? pause() : resume()">Toggle</button>
-  <div
-    class="sprite"
-    :style="`background-position: ${activePosition}px 50%;`"
-  ></div>
+  {{ ready }}
+  {{ isPending }}
+  <Transition appear>
+    <div class="alert" v-if="isPending">
+      You post has benn saved
+      <button @click="stop">X</button>
+    </div>
+  </Transition>
+  <button @click="start">start</button>
 </template>
-
 <style>
-.sprite {
-  background: url(https://freesvg.org/img/1525205509.png) no-repeat;
-  width: 75px;
-  height: 150px;
-  /* background-position: -150px 50%; */
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+.alert {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+    apple color emoji, segoe ui emoji, Segoe UI Symbol, noto color emoji;
+  -webkit-tap-highlight-color: transparent;
+  --su: 158 64% 52%;
+  font-size: 1rem;
+  line-height: 1.75;
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  align-items: center;
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--su) / var(--tw-bg-opacity));
+}
+
+.alert::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  background: url(/icon.svg);
 }
 </style>
