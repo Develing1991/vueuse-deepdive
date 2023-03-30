@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useBase64 } from '@vueuse/core';
-const string = ref('');
-const image = ref('');
-const { base64 } = useBase64(string);
-const { base64: base64Image } = useBase64(image);
+import { ref, computed } from 'vue';
+import { computedAsync } from '@vueuse/core';
+const id = ref(1);
+const url = computed(
+  () => `https://jsonplaceholder.typicode.com/posts/${id.value}/`
+);
+const post = computedAsync(async () => {
+  // await post.get(id.value)
+  const res = await fetch(url.value);
+  return res.json();
+}, null);
 </script>
 
 <template>
-  <input type="text" v-model="string" />
-  <input
-    type="file"
-    accept="image/png, image/jpeg"
-    @change="image = $event.target.files[0]"
-  />
-  <br />
-  {{ base64 }}
-  <img v-if="image" :src="base64Image" width="200" />
+  <input type="number" v-model="id" />
+  {{ post }}
 </template>
