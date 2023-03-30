@@ -1,20 +1,14 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useFetch } from '@vueuse/core';
-const id = ref(1);
-const url = computed(() => {
-  return `https://jsonplaceholder.typicode.com/todos/${id.value}`;
-});
-const { isFetching, data, error } = useFetch(url, {
-  refetch: true,
-});
+import { ref, isRef, toRef, computed } from 'vue';
+import { reactify } from '@vueuse/core';
+import camelCase from 'lodash/camelCase';
+const string = ref('hello_word');
+const rCamelCase = reactify(camelCase);
+const calmelCaseString = rCamelCase(string);
 </script>
 
 <template>
-  <input type="text" v-model="id" />
-  <div v-if="error">{{ error }}</div>
-  <div v-else-if="isFetching">Loading...</div>
-  <pre v-else>
-  {{ data }}
-  </pre>
+  <input type="text" v-model="string" />
+  <br />
+  {{ calmelCaseString }}
 </template>
