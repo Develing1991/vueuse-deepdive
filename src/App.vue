@@ -1,61 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useTimeoutFn } from '@vueuse/core';
-const showAlert = ref(true);
-const { start, stop, isPending } = useTimeoutFn(() => {
-  showAlert.value = false;
-}, 5000);
+import { ref, computed } from 'vue';
+import { useTimestamp, useInterval } from '@vueuse/core';
+const timestamp = useTimestamp();
+const counter = useInterval(1000);
+const start = Date.now();
+const secondsPassed = computed(() => {
+  return Math.floor((timestamp.value - start) / 1000);
+});
+const hangTheBrowser = () => {
+  for (let i = 0; i < 1_000_000; i++) {
+    console.log(i);
+  }
+};
 </script>
 
 <template>
-  {{ isPending }}
-  <Transition appear>
-    <div class="alert" v-if="showAlert" @mouseenter="stop" @mouseout="start">
-      You post has benn saved
-      <button @click="stop">X</button>
-    </div>
-  </Transition>
+  <div>Interval: {{ counter }}</div>
+  <div>Timestamp: {{ secondsPassed }}</div>
+  <button @click="hangTheBrowser">Hang the Browser</button>
 </template>
-<style>
-.v-enter-active,
-.v-leave-active {
-  transition: all 0.2s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  transform: translateY(-10px);
-  opacity: 0;
-}
-
-.alert {
-  -webkit-text-size-adjust: 100%;
-  tab-size: 4;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
-    apple color emoji, segoe ui emoji, Segoe UI Symbol, noto color emoji;
-  -webkit-tap-highlight-color: transparent;
-  --su: 158 64% 52%;
-  font-size: 1rem;
-  line-height: 1.75;
-  box-sizing: border-box;
-  border-width: 0;
-  border-style: solid;
-  border-color: #e5e7eb;
-  display: flex;
-  width: 100%;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 10px;
-  align-items: center;
-  --tw-bg-opacity: 1;
-  background-color: hsl(var(--su) / var(--tw-bg-opacity));
-}
-
-.alert::before {
-  content: '';
-  width: 20px;
-  height: 20px;
-  background: url(/icon.svg);
-}
-</style>
